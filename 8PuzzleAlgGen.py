@@ -1,7 +1,7 @@
 from collections import Counter
 import random
 import numpy as np
-#comentario holiscas
+
 MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
@@ -58,7 +58,39 @@ def calcular_probabilidad():
         poblacion_inicial[i].probabilidad = int((poblacion_inicial[i].correctos/total_errores_iniciales)*100)
         print(poblacion_inicial[i].probabilidad)
 
+def llenar_ruleta(nuevo_valor, numero_maximo):
+    contador=numero_maximo
+    for i in range(100):
+        if ruleta[i] == 0 and contador != 0:
+            ruleta[i] = nuevo_valor
+            contador-=1
 
+def girar_ruleta():
+    return ruleta[random.randint(0, 99)]-1
 
 poblacion_inicial = generar_estados_iniciales()
 calcular_probabilidad()
+
+for i in range(NUMERO_ESTADOS_INICIALES):
+    if poblacion_inicial[i].probabilidad != 0:
+        numero_casillas = poblacion_inicial[i].probabilidad
+        llenar_ruleta(i+1,numero_casillas)
+    else:
+        if ruleta[99]==0:
+            llenar_ruleta(i+1,1)
+        else:
+            ruleta[random.randint(0, 99)]=i+1
+
+random.shuffle(ruleta)
+
+ganador_p, ganador_m = 0
+while ganador_p !=0:
+    ganador_p = girar_ruleta()
+padre:Puzzle = poblacion_inicial[ganador_p-1]
+
+while ganador_m !=0 and ganador_m!= ganador_p:
+    ganador_m = girar_ruleta()
+madre:Puzzle = poblacion_inicial[ganador_m-1]
+
+
+

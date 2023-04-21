@@ -53,7 +53,7 @@ for i in range(NUMERO_ESTADOS_INICIALES):
 
 #Calcular probabilidad en base a la heuristicato
 total_errores_iniciales = sum(correctos)
-##corregir cuando sea 0
+
 print("-----errores "+str(total_errores_iniciales))
 for i in range(NUMERO_ESTADOS_INICIALES):
     poblacion_inicial[i].probabilidad = (poblacion_inicial[i].correctos/total_errores_iniciales)*100

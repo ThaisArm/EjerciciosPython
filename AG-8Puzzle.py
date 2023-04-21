@@ -1,7 +1,7 @@
 from collections import Counter
 import random
 import numpy as np
-#comentario
+#comentario holiscas
 MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15

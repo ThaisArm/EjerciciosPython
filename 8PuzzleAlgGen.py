@@ -19,7 +19,7 @@ estado_objetivo=np.array([
 
 class Puzzle:
     def __init__(self, estado, heuristica, correctos):
-        self.estado = estado
+        self.estado:np.array() = estado
         self.heuristica = heuristica
         self.correctos = correctos
         self.probabilidad = 0
@@ -68,6 +68,18 @@ def llenar_ruleta(nuevo_valor, numero_maximo):
 def girar_ruleta():
     return ruleta[random.randint(0, 99)]-1
 
+def corregir_hijo(estado):
+    numeros_faltantes = set(range(9))
+    for i in range(len(estado)):
+        for j in range(len(estado[0])):
+            numero = estado[i, j]
+            if numero in numeros_faltantes:
+                numeros_faltantes.remove(numero)
+            else:
+                nuevo_numero = numeros_faltantes.pop()
+                estado[i, j] = nuevo_numero
+    return estado
+
 poblacion_inicial = generar_estados_iniciales()
 calcular_probabilidad()
 
@@ -83,14 +95,31 @@ for i in range(NUMERO_ESTADOS_INICIALES):
 
 random.shuffle(ruleta)
 
-ganador_p, ganador_m = 0
-while ganador_p !=0:
+ganador_p = 0
+while ganador_p==0:
     ganador_p = girar_ruleta()
 padre:Puzzle = poblacion_inicial[ganador_p-1]
 
-while ganador_m !=0 and ganador_m!= ganador_p:
+ganador_m = 0
+while ganador_m==0 and ganador_m==ganador_p:
     ganador_m = girar_ruleta()
 madre:Puzzle = poblacion_inicial[ganador_m-1]
+
+#separar padres ---> Falta hacer que se genere random
+izq_madre = madre.estado[:, 0]
+der_madre = madre.estado[:, 1:]
+izq_padre = padre.estado[:, 0]
+der_padre = padre.estado[:, 1:]
+
+hijo_1 = np.concatenate((izq_madre[:, np.newaxis], der_padre), axis=1)
+hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)
+
+hijo_1 = corregir_hijo(hijo_1)
+hijo_2 = corregir_hijo(hijo_2)
+
+print(hijo_1)
+print("-----------")
+print(hijo_2)
 
 
 

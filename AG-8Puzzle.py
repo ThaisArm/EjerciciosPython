@@ -33,10 +33,9 @@ def calculo_euristica(estado_inicial):
                 if estado_inicial[i][j] != 0:
                     sum+=1
     return sum 
-
-
 #Zona de Ejecucion
 #Generar estados iniciales
+
 correctos = []
 for i in range(NUMERO_ESTADOS_INICIALES):
     numeros = list(range(9))

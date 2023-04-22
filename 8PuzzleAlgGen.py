@@ -150,11 +150,12 @@ print(hijo_1.estado)
 print("HIJO2")
 print(hijo_2.estado)
 
-#Decidir si clonar o no 
+#Decidir si mutar o no 
 hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
-decision_clonar = ruleta_mutacion[random.randint(0, 99)]
-print(decision_clonar)
-if(decision_clonar == 1):
+decision_mutar = ruleta_mutacion[random.randint(0, 99)]
+print(decision_mutar)
+if(decision_mutar == 1):
+    #decidir hijo a mutar
     decision_hijo = random.randint(1,2)
     print("Hijo a mutar: ",decision_hijo)
     if decision_hijo == 1:
@@ -191,9 +192,9 @@ print(hijo_mutado.estado)
 #Eliminar estados padres, agregar los hijos
 if(len(hijo_mutado.estado) != 0):
     if(decision_hijo == 1):
-        hijo_1.estado = hijo_mutado.estado
+        hijo_1= hijo_mutado
     else:
-        hijo_2.estado = hijo_mutado.estado
+        hijo_2 = hijo_mutado
 #se eliminan todos los elementos?
 poblacion_inicial.clear()
 poblacion_inicial.extend([hijo_1, hijo_2])

@@ -8,7 +8,7 @@ MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
 cross_over = random.randint(0, 1)
-
+ruleta = [0]*100
 poblacion_inicial = []
 ruleta = [0]*100
 ruleta_mutacion = [0]*100

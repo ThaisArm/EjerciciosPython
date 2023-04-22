@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 MAXIMO_ERRORES = 8
-NUMERO_ESTADOS_INICIALES = 5
+NUMERO_ESTADOS_INICIALES = 10
 PROBABILIDAD_MUTACION = 15
 cross_over = random.randint(0, 1)
 ruleta_mutacion = [0]*100
@@ -35,9 +35,9 @@ def generar_estados_iniciales():
         muestra.append(Puzzle(estado_generado, heuristica_generado,correctos_generado))
         for i in range(len(muestra)):
           estados_usados.append(muestra[i].estado)
-        for row in muestra[i].estado:
+        """for row in muestra[i].estado:
             print(row)
-        print("------------")
+        print("------------")"""
     if sum(correctos) == 0:
         generar_estados_iniciales()
     else:
@@ -239,7 +239,10 @@ def encontrar_solucion(poblacion_inicial):
           hijo_2 = hijo_mutado  
 
     #se eliminan todos los elementos???
-    poblacion_inicial.clear()
+    a = ganador_p-1
+    b = ganador_m-1
+    poblacion_inicial.pop(a)
+    poblacion_inicial.pop(b)
     hijo_1.heuristica = calculo_euristica(hijo_1.estado)
     hijo_1.correctos = MAXIMO_ERRORES-hijo_1.heuristica
     correctos.append(hijo_1.correctos)

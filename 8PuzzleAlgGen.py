@@ -175,10 +175,16 @@ if(decision_clonar == 1):
       numero_derecha=hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]
       hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]=0
       hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
-
 print(hijo_mutado)
+
+
 #Eliminar estados padres, agregar los hijos
-
-
+if(len(hijo_mutado) != 0):
+    if(decision_hijo == 1):
+        hijo_1 = hijo_mutado
+    else:
+        hijo_2 = hijo_mutado
+poblacion_inicial.clear()
+poblacion_inicial.extend([hijo_1, hijo_2])
 
 

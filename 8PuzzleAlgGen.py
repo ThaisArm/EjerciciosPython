@@ -125,19 +125,30 @@ while ganador_m==0 and ganador_m==ganador_p:
 madre:Puzzle = poblacion_inicial[ganador_m-1]
 
 #separar padres ---> Falta hacer que se genere random
-izq_madre = madre.estado[:, 0]
+"""izq_madre = madre.estado[:, 0]
 der_madre = madre.estado[:, 1:]
 izq_padre = padre.estado[:, 0]
 der_padre = padre.estado[:, 1:]
 
 hijo_1 = np.concatenate((izq_madre[:, np.newaxis], der_padre), axis=1)
-hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)
+hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)"""
+#creo que así se haría con random
+izq_madre = madre.estado[:, :cross_over]
+izq_padre = padre.estado[:, :cross_over]
+der_madre = madre.estado[:, cross_over:]
+der_padre = padre.estado[:, cross_over:]
 
+hijo_1 = np.concatenate((izq_madre, der_padre), axis=1)
+hijo_2 = np.concatenate((izq_padre, der_madre), axis=1)
 hijo_1 = corregir_hijo(hijo_1)
 hijo_2 = corregir_hijo(hijo_2)
-
+print("MADRE")
+print(madre.estado)
+print("PADRE")
+print(padre.estado)
+print("HIJO")
 print(hijo_1)
-print("-----------")
+print("HIJO2")
 print(hijo_2)
 
 #Decidir si clonar o no 

@@ -10,7 +10,6 @@ PROBABILIDAD_MUTACION = 15
 cross_over = random.randint(0, 1)
 ruleta = [0]*100
 poblacion_inicial = []
-ruleta = [0]*100
 ruleta_mutacion = [0]*100
 correctos = []
 
@@ -115,7 +114,7 @@ for i in range(NUMERO_ESTADOS_INICIALES):
             ruleta[random.randint(0, 99)]=i+1
 
 random.shuffle(ruleta)
-
+print(ruleta)
 ganador_p = 0
 while ganador_p==0:
     ganador_p = girar_ruleta()

@@ -7,6 +7,7 @@ NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
 cross_over = random.randint(0, 1)
 ruleta_mutacion = [0]*100
+ruleta = [0]*100
 #Por qué el arreglo de correctos?
 correctos = []
 estado_objetivo=np.array([
@@ -63,7 +64,7 @@ def calcular_probabilidad(poblacion):
         poblacion[i].probabilidad = int((poblacion[i].correctos/total_errores_iniciales)*100)
         print(poblacion[i].probabilidad)
 
-def llenar_ruleta(nuevo_valor, numero_maximo,ruleta):
+def llenar_ruleta(nuevo_valor, numero_maximo):
     contador=numero_maximo
     for i in range(100):
         if ruleta[i] == 0 and contador != 0:
@@ -169,19 +170,19 @@ def mutar(hijo):
 
 
 def encontrar_solucion(poblacion_inicial):
-    ruleta = [0]*100
-    calcular_probabilidad(poblacion_inicial)
+    calcular_probabilidad(poblacion)
     for i in range(len(poblacion_inicial)):
+      ruleta = [0]*100
       if poblacion_inicial[i].probabilidad != 0:
           numero_casillas = poblacion_inicial[i].probabilidad
-          llenar_ruleta(i+1,numero_casillas,ruleta)
+          llenar_ruleta(i+1,numero_casillas)
       else:
           if ruleta[99]==0:
-              llenar_ruleta(i+1,1,ruleta)
+              llenar_ruleta(i+1,1)
           else:
               ruleta[random.randint(0, 99)]=i+1
     random.shuffle(ruleta)
-    print(ruleta)
+    #print(ruleta)
 
     ganador_p = 0
     while ganador_p==0:

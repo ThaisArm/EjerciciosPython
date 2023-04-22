@@ -130,13 +130,22 @@ hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)
 hijo_1 = corregir_hijo(hijo_1)
 hijo_2 = corregir_hijo(hijo_2)
 
-#Decidir si clonar o no 
-
-
-
 print(hijo_1)
 print("-----------")
 print(hijo_2)
+
+#Decidir si clonar o no 
+decision_clonar = ruleta_mutacion[random.randint(0, 99)]
+#print(decision_clonar)
+if(decision_clonar == 1):
+    decision_hijo = random.randint(1,2)
+    #print(decision_hijo)
+    if decision_hijo == 1:
+      hijo_mutado = [row[:] for row in hijo_1]
+    else:
+      hijo_mutado = [row[:] for row in hijo_2]
+    #print(hijo_mutado)
+
 
 
 

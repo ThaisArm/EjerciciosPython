@@ -137,66 +137,67 @@ izq_madre = madre.estado[:, :cross_over]
 izq_padre = padre.estado[:, :cross_over]
 der_madre = madre.estado[:, cross_over:]
 der_padre = padre.estado[:, cross_over:]
-
-hijo_1 = np.concatenate((izq_madre, der_padre), axis=1)
-hijo_2 = np.concatenate((izq_padre, der_madre), axis=1)
-hijo_1 = corregir_hijo(hijo_1)
-hijo_2 = corregir_hijo(hijo_2)
+hijo_1 = Puzzle(estado=np.concatenate((izq_madre, der_padre), axis=1), heuristica=0, correctos=[])
+hijo_2= Puzzle(estado=np.concatenate((izq_padre, der_madre), axis=1), heuristica=0, correctos=[])
+hijo_1.estado = corregir_hijo(hijo_1.estado)
+hijo_2.estado = corregir_hijo(hijo_2.estado)
 print("MADRE")
 print(madre.estado)
 print("PADRE")
 print(padre.estado)
 print("HIJO")
-print(hijo_1)
+print(hijo_1.estado)
 print("HIJO2")
-print(hijo_2)
+print(hijo_2.estado)
 
 #Decidir si clonar o no 
+hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
 decision_clonar = ruleta_mutacion[random.randint(0, 99)]
 print(decision_clonar)
-hijo_mutado = []
 if(decision_clonar == 1):
     decision_hijo = random.randint(1,2)
     print("Hijo a mutar: ",decision_hijo)
     if decision_hijo == 1:
-      hijo_mutado = [row[:] for row in hijo_1]
+      hijo_mutado.estado = hijo_1.estado.copy()
     else:
-      hijo_mutado = [row[:] for row in hijo_2]
-    posicion_cero = encontrar_cero(hijo_mutado)
-    print(hijo_mutado)
+      hijo_mutado.estado = hijo_2.estado.copy()
+    posicion_cero = encontrar_cero(hijo_mutado.estado)
+    print(hijo_mutado.estado)
     #Movimientos
     #movimientos hacia arriba
     if posicion_cero[0]>0:                
-      numero_arriba=hijo_mutado[posicion_cero[0]-1][posicion_cero[1]]
-      hijo_mutado[posicion_cero[0]-1][posicion_cero[1]]=0
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
+      numero_arriba=hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]
+      hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]=0
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
     
     #movimiento hacia abajo
     elif posicion_cero[0]<=1:
-      numero_abajo=hijo_mutado[posicion_cero[0]+1][posicion_cero[1]]
-      hijo_mutado[posicion_cero[0]+1][posicion_cero[1]]=0
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
+      numero_abajo=hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]
+      hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]=0
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
     #movimiento hacia la izquierda
     elif posicion_cero[1]>=1:
-      numero_izquierda=hijo_mutado[posicion_cero[0]][posicion_cero[1]-1]
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]-1]=0
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
+      numero_izquierda=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]=0
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
     #movimiento hacia la derecha
     else:
-      numero_derecha=hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]=0
-      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
-print(hijo_mutado)
+      numero_derecha=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]=0
+      hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
+print(hijo_mutado.estado)
 
 
 #Eliminar estados padres, agregar los hijos
-if(len(hijo_mutado) != 0):
+if(len(hijo_mutado.estado) != 0):
     if(decision_hijo == 1):
-        hijo_1 = hijo_mutado
+        hijo_1.estado = hijo_mutado.estado
     else:
-        hijo_2 = hijo_mutado
+        hijo_2.estado = hijo_mutado.estado
 #se eliminan todos los elementos?
 poblacion_inicial.clear()
 poblacion_inicial.extend([hijo_1, hijo_2])
-print(poblacion_inicial)
+print("POBLACION")
+for i in range(len(poblacion_inicial)):
+    print(poblacion_inicial[i].estado)
 

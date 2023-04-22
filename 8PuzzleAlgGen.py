@@ -9,7 +9,20 @@ cross_over = random.randint(0, 1)
 
 poblacion_inicial = []
 ruleta = [0]*100
+ruleta_mutacion = [0]*100
 correctos = []
+
+
+#verificar si solo una ruleta o separadas
+#generar ruleta para la mutación (ver función de llenar ruleta)
+contador = 0
+while(contador < 15):
+  posicion = random.randint(0, 99)
+  if ruleta_mutacion[posicion] == 0:
+      ruleta_mutacion[posicion] = 1
+      contador +=1
+#print(ruleta_mutacion)
+#print("Número de probabilidad de mutación = ",ruleta_mutacion.count(1))
 
 estado_objetivo=np.array([
     [0, 1, 2],
@@ -116,6 +129,10 @@ hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)
 
 hijo_1 = corregir_hijo(hijo_1)
 hijo_2 = corregir_hijo(hijo_2)
+
+#Decidir si clonar o no 
+
+
 
 print(hijo_1)
 print("-----------")

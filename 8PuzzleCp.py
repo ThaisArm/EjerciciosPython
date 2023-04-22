@@ -14,7 +14,7 @@ estado_objetivo=np.array([
     [3, 4, 5],
     [6, 7, 8]
 ])
-
+estados_usados = ([])
 class Puzzle:
     def __init__(self, estado, heuristica, correctos):
         self.estado:np.array() = estado
@@ -46,6 +46,8 @@ def generar_estados_iniciales():
         correctos_generado = MAXIMO_ERRORES-heuristica_generado
         correctos.append(correctos_generado)
         muestra.append(Puzzle(estado_generado, heuristica_generado,correctos_generado))
+        for i in range(len(muestra)):
+          estados_usados.append(muestra[i].estado)
         for row in muestra[i].estado:
             print(row)
         print("------------")
@@ -98,9 +100,42 @@ def comprobar_estado_objetivo(poblacion):
     if np.all(poblacion[i].estado == estado_objetivo):
       return True
   return False
-
+def mutar(hijo):
+  hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
+  hijo_mutado.estado = hijo.estado.copy()
+  posicion_cero = encontrar_cero(hijo_mutado.estado)
+  #Movimientos
+  #movimientos hacia arriba
+  if posicion_cero[0]>0:                
+        numero_arriba=hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]
+        hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]=0
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
+      #movimiento hacia abajo
+  elif posicion_cero[0]<=1:
+        numero_abajo=hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]
+        hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]=0
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
+      #movimiento hacia la izquierda
+  elif posicion_cero[1]>=1:
+        numero_izquierda=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]=0
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
+      #movimiento hacia la derecha
+  else:
+        numero_derecha=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]=0
+        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
+  print(hijo_mutado.estado)
+  return hijo_mutado
+#comprobar estado_usado
+def comprobar_estado_usado(hijo):
+  if np.array_equal(hijo.estado, estados_usados):
+      return True
+  return False
 #FUNCION
 def encontrar_solucion(poblacion_inicial):
+    if(comprobar_estado_objetivo(poblacion_inicial)):
+        return poblacion_inicial
     calcular_probabilidad(poblacion)
     for i in range(len(poblacion_inicial)):
       ruleta = [0]*100
@@ -138,56 +173,38 @@ def encontrar_solucion(poblacion_inicial):
     print("HIJO2")
     print(hijo_2.estado)
     #Decidir si mutar o no 
-    hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
     decision_mutar = ruleta_mutacion[random.randint(0, 99)]
     print(decision_mutar)
+    hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
     if(decision_mutar == 1):
       #decidir hijo a mutar
       decision_hijo = random.randint(1,2)
       print("Hijo a mutar: ",decision_hijo)
       if decision_hijo == 1:
-        hijo_mutado.estado = hijo_1.estado.copy()
+        hijo_mutado = mutar(hijo_1)
       else:
-        hijo_mutado.estado = hijo_2.estado.copy()
-      posicion_cero = encontrar_cero(hijo_mutado.estado)
-      print(hijo_mutado.estado)
-      #Movimientos
-      #movimientos hacia arriba
-      if posicion_cero[0]>0:                
-        numero_arriba=hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]
-        hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
-      
-      #movimiento hacia abajo
-      elif posicion_cero[0]<=1:
-        numero_abajo=hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]
-        hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
-      #movimiento hacia la izquierda
-      elif posicion_cero[1]>=1:
-        numero_izquierda=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
-      #movimiento hacia la derecha
-      else:
-        numero_derecha=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
-    print(hijo_mutado.estado)
+        hijo_mutado = mutar(hijo_2)   
     #Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
       if(decision_hijo == 1):
           hijo_1= hijo_mutado        
       else:
           hijo_2 = hijo_mutado
+    #comprobar existencia de estados
+    while comprobar_estado_usado(hijo_1):
+        hijo_1 = mutar(hijo_1)
+    while comprobar_estado_usado(hijo_2):
+        hijo_2 = mutar(hijo_2)   
     #se eliminan todos los elementos? 
     poblacion_inicial.clear()
     hijo_1.heuristica = calculo_euristica(hijo_1.estado)
     hijo_1.correctos = MAXIMO_ERRORES-hijo_1.heuristica
     correctos.append(hijo_1.correctos)
+    estados_usados.append(hijo_1.estado)
     hijo_2.heuristica = calculo_euristica(hijo_2.estado)
     hijo_2.correctos = MAXIMO_ERRORES-hijo_2.heuristica
     correctos.append(hijo_2.correctos)
+    estados_usados.append(hijo_2.estado)
     poblacion_inicial.extend([hijo_1, hijo_2])
     print("POBLACION")
     #for i in range(len(poblacion_inicial)):
@@ -198,5 +215,44 @@ def encontrar_solucion(poblacion_inicial):
       encontrar_solucion(poblacion_inicial)
 
 #EJECUCIÓN-----
-poblacion = generar_estados_iniciales()
-encontrar_solucion(poblacion)
+#poblacion = generar_estados_iniciales()
+estado_1=np.array([
+    [1, 0, 2],
+    [3, 4, 5],
+    [6, 7, 8]
+])
+a = Puzzle(estado = estado_1.copy(), heuristica=calculo_euristica(estado_1), correctos=[])
+a.correctos= MAXIMO_ERRORES-a.heuristica
+estado_2=np.array([
+    [0, 1, 2],
+    [3, 4, 8],
+    [6, 7, 5]
+])
+b = Puzzle(estado = estado_2.copy(), heuristica=calculo_euristica(estado_2), correctos=[])
+b.correctos= MAXIMO_ERRORES-b.heuristica
+estado_3=np.array([
+    [0, 1, 2],
+    [3, 7, 5],
+    [6, 4, 8]
+])
+c = Puzzle(estado = estado_3.copy(), heuristica=calculo_euristica(estado_3), correctos=[])
+c.correctos= MAXIMO_ERRORES-c.heuristica
+estado_4=np.array([
+    [0, 1, 2],
+    [6, 4, 5],
+    [3, 7, 8]
+])
+d = Puzzle(estado = estado_4.copy(), heuristica=calculo_euristica(estado_4), correctos=[])
+d.correctos= MAXIMO_ERRORES-d.heuristica
+estado_5=np.array([
+    [0, 2, 1],
+    [3, 4, 5],
+    [6, 7, 8]
+])
+e = Puzzle(estado = estado_5.copy(), heuristica=calculo_euristica(estado_5), correctos=[])
+e.correctos= MAXIMO_ERRORES-e.heuristica
+poblacion = []
+poblacion.extend([a,b,c,d,e])
+poblacion_final = encontrar_solucion(poblacion)
+for i in range(len(poblacion_final)):
+    print(poblacion_final[i].estado)

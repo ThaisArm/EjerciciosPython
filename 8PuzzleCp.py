@@ -101,33 +101,47 @@ def comprobar_estado_objetivo(poblacion):
     if np.all(poblacion[i].estado == estado_objetivo):
       return True
   return False
+
 def mutar(hijo):
-  hijo_mutado = Puzzle(estado = [], heuristica=0, correctos=[])
-  hijo_mutado.estado = hijo.estado.copy()
-  posicion_cero = encontrar_cero(hijo_mutado.estado)
-  #Movimientos
-  #movimientos hacia arriba
-  if posicion_cero[0]>0:                
-        numero_arriba=hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]
-        hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
-      #movimiento hacia abajo
-  if posicion_cero[0]<=1:
-        numero_abajo=hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]
-        hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
-      #movimiento hacia la izquierda
-  if posicion_cero[1]>=1:
-        numero_izquierda=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
-      #movimiento hacia la derecha
-  if posicion_cero[1]<=1:
-        numero_derecha=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]=0
-        hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
-  print(hijo_mutado.estado)
-  return hijo_mutado
+    posicion_cero = encontrar_cero(hijo.estado)
+    copia_arriba= [row[:] for row in hijo.estado]
+    copia_abajo =[row[:] for row in hijo.estado]
+    copia_izquierda = [row[:] for row in hijo.estado]
+    copia_derecha =[row[:] for row in hijo.estado]
+    # Movimientos
+   #movimientos hacia arriba
+    if posicion_cero[0]>0:                
+        numer_arriba=hijo.estado[posicion_cero[0]-1][posicion_cero[1]]
+        copia_arriba[posicion_cero[0]-1][posicion_cero[1]]=0
+        copia_arriba[posicion_cero[0]][posicion_cero[1]]=numer_arriba
+        estado_mutado = copia_arriba.copy()
+
+    #movimiento hacia abajo
+    if posicion_cero[0]<=1:
+        numer_abajo=hijo.estado[posicion_cero[0]+1][posicion_cero[1]]
+        copia_abajo[posicion_cero[0]+1][posicion_cero[1]]=0
+        copia_abajo[posicion_cero[0]][posicion_cero[1]]=numer_abajo
+        estado_mutado = copia_abajo.copy()
+
+    #movimiento hacia la izquierda
+    if posicion_cero[1]>=1:
+        numer_izquierda=hijo.estado[posicion_cero[0]][posicion_cero[1]-1]
+        copia_izquierda[posicion_cero[0]][posicion_cero[1]-1]=0
+        copia_izquierda[posicion_cero[0]][posicion_cero[1]]=numer_izquierda
+        estado_mutado = copia_izquierda.copy()
+
+    #movimiento hacia la derecha
+    if posicion_cero[1]<=1:
+        numer_derecha=hijo.estado[posicion_cero[0]][posicion_cero[1]+1]
+        copia_derecha[posicion_cero[0]][posicion_cero[1]+1]=0
+        copia_derecha[posicion_cero[0]][posicion_cero[1]]=numer_derecha
+        estado_mutado = copia_derecha.copy()
+    print(estado_mutado)
+    return estado_mutado
+
+
+
+
 #comprobar estado_usado
 def comprobar_estado_usado(hijo):
   if np.array_equal(hijo.estado, estados_usados):
@@ -190,17 +204,15 @@ def encontrar_solucion(poblacion_inicial):
       decision_hijo = random.randint(1,2)
       print("Hijo a mutar: ",decision_hijo)
       if decision_hijo == 1:
-        hijo_mutado = mutar(hijo_1)
+        hijo_mutado.estado = mutar(hijo_1)
       else:
-        hijo_mutado = mutar(hijo_2)   
+        hijo_mutado.estado = mutar(hijo_2)   
     #Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
       if(decision_hijo == 1):
-        hijo_1 = hijo_mutado
         while comprobar_estado_usado_correcion(hijo_mutado.estado):
           hijo_1 = hijo_mutado 
       else:
-        hijo_2 = hijo_mutado
         while comprobar_estado_usado_correcion(hijo_mutado.estado):
           hijo_2 = hijo_mutado  
 
@@ -230,8 +242,8 @@ def encontrar_solucion(poblacion_inicial):
 
 #EJECUCIÓN-----
 poblacion = generar_estados_iniciales()
-try:  
-  encontrar_solucion(poblacion)
-except:
-   print("----NO HAY SOLUCIÓN-----")
+#try:  
+encontrar_solucion(poblacion)
+#except:
+#print("----NO HAY SOLUCIÓN-----")
 #print(estados_usados)

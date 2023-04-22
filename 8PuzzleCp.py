@@ -5,7 +5,8 @@ import numpy as np
 MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
-cross_over = random.randint(0, 1)
+maxima_recursion = 3
+cross_over = 0
 ruleta = [0]*100
 ruleta_mutacion = [0]*100
 correctos = []
@@ -74,8 +75,8 @@ def girar_ruleta(ruleta):
     return ruleta[random.randint(0, 99)]-1
 
 def corregir_hijo(estado):
-    numeros_faltantes = set(range(9))
-    for i in range(len(estado)):
+      numeros_faltantes = set(range(9))
+      for i in range(len(estado)):
         for j in range(len(estado[0])):
             numero = estado[i, j]
             if numero in numeros_faltantes:
@@ -83,7 +84,7 @@ def corregir_hijo(estado):
             else:
                 nuevo_numero = numeros_faltantes.pop()
                 estado[i, j] = nuevo_numero
-    return estado
+      return estado
 
 #verificar si solo una ruleta o separadas
 #generar ruleta para la mutación (ver función de llenar ruleta)
@@ -132,6 +133,10 @@ def comprobar_estado_usado(hijo):
   if np.array_equal(hijo.estado, estados_usados):
       return True
   return False
+def comprobar_estado_usado_correcion(estado):
+  if np.array_equal(estado, estados_usados):
+      return True
+  return False
 #FUNCION
 def encontrar_solucion(poblacion_inicial):
     if(comprobar_estado_objetivo(poblacion_inicial)):
@@ -156,18 +161,22 @@ def encontrar_solucion(poblacion_inicial):
     while ganador_m==0 and ganador_m==ganador_p:
       ganador_m = girar_ruleta(ruleta)
     madre:Puzzle = poblacion_inicial[ganador_m-1]
-    izq_madre = madre.estado[:, :cross_over]
-    izq_padre = padre.estado[:, :cross_over]
-    der_madre = madre.estado[:, cross_over:]
-    der_padre = padre.estado[:, cross_over:]
+    izq_madre = madre.estado[:, :cross_over+1]
+    izq_padre = padre.estado[:, :cross_over+1]
+    der_madre = madre.estado[:, cross_over+1:]
+    der_padre = padre.estado[:, cross_over+1:]
     hijo_1 = Puzzle(estado=np.concatenate((izq_madre, der_padre), axis=1), heuristica=0, correctos=[])
     hijo_2= Puzzle(estado=np.concatenate((izq_padre, der_madre), axis=1), heuristica=0, correctos=[])
-    hijo_1.estado = corregir_hijo(hijo_1.estado)
-    hijo_2.estado = corregir_hijo(hijo_2.estado)
     print("MADRE")
     print(madre.estado)
     print("PADRE")
     print(padre.estado)
+    print("HIJO")
+    print(hijo_1.estado)
+    print("HIJO2")
+    print(hijo_2.estado)
+    hijo_1.estado = corregir_hijo(hijo_1.estado)
+    hijo_2.estado = corregir_hijo(hijo_2.estado)
     print("HIJO")
     print(hijo_1.estado)
     print("HIJO2")
@@ -187,14 +196,14 @@ def encontrar_solucion(poblacion_inicial):
     #Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
       if(decision_hijo == 1):
-          hijo_1= hijo_mutado        
+          """while comprobar_estado_usado(hijo_mutado):
+            hijo_mutado = mutar(hijo_mutado)"""  
+          hijo_1 = hijo_mutado   
       else:
+          """while comprobar_estado_usado(hijo_mutado):
+            hijo_mutado = mutar(hijo_mutado) """
           hijo_2 = hijo_mutado
-    #comprobar existencia de estados
-    while comprobar_estado_usado(hijo_1):
-        hijo_1 = mutar(hijo_1)
-    while comprobar_estado_usado(hijo_2):
-        hijo_2 = mutar(hijo_2)   
+
     #se eliminan todos los elementos? 
     poblacion_inicial.clear()
     hijo_1.heuristica = calculo_euristica(hijo_1.estado)
@@ -206,53 +215,20 @@ def encontrar_solucion(poblacion_inicial):
     correctos.append(hijo_2.correctos)
     estados_usados.append(hijo_2.estado)
     poblacion_inicial.extend([hijo_1, hijo_2])
-    print("POBLACION")
+    #print("POBLACION")
     #for i in range(len(poblacion_inicial)):
     #  print(poblacion_inicial[i].estado)
-    if(comprobar_estado_objetivo(poblacion_inicial)):
-      return poblacion_inicial
+    global maxima_recursion
+    if comprobar_estado_objetivo(poblacion_inicial) or maxima_recursion==0:
+      print("POBLACION")
+      for i in range(len(poblacion_inicial)):
+        print(poblacion_inicial[i].estado)
+      return
     else:
+      maxima_recursion-=1
       encontrar_solucion(poblacion_inicial)
 
 #EJECUCIÓN-----
-#poblacion = generar_estados_iniciales()
-estado_1=np.array([
-    [1, 0, 2],
-    [3, 4, 5],
-    [6, 7, 8]
-])
-a = Puzzle(estado = estado_1.copy(), heuristica=calculo_euristica(estado_1), correctos=[])
-a.correctos= MAXIMO_ERRORES-a.heuristica
-estado_2=np.array([
-    [0, 1, 2],
-    [3, 4, 8],
-    [6, 7, 5]
-])
-b = Puzzle(estado = estado_2.copy(), heuristica=calculo_euristica(estado_2), correctos=[])
-b.correctos= MAXIMO_ERRORES-b.heuristica
-estado_3=np.array([
-    [0, 1, 2],
-    [3, 7, 5],
-    [6, 4, 8]
-])
-c = Puzzle(estado = estado_3.copy(), heuristica=calculo_euristica(estado_3), correctos=[])
-c.correctos= MAXIMO_ERRORES-c.heuristica
-estado_4=np.array([
-    [0, 1, 2],
-    [6, 4, 5],
-    [3, 7, 8]
-])
-d = Puzzle(estado = estado_4.copy(), heuristica=calculo_euristica(estado_4), correctos=[])
-d.correctos= MAXIMO_ERRORES-d.heuristica
-estado_5=np.array([
-    [0, 2, 1],
-    [3, 4, 5],
-    [6, 7, 8]
-])
-e = Puzzle(estado = estado_5.copy(), heuristica=calculo_euristica(estado_5), correctos=[])
-e.correctos= MAXIMO_ERRORES-e.heuristica
-poblacion = []
-poblacion.extend([a,b,c,d,e])
-poblacion_final = encontrar_solucion(poblacion)
-for i in range(len(poblacion_final)):
-    print(poblacion_final[i].estado)
+poblacion = generar_estados_iniciales()
+encontrar_solucion(poblacion)
+#print(estados_usados)

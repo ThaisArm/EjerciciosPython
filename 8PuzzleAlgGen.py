@@ -135,10 +135,10 @@ der_padre = padre.estado[:, 1:]
 hijo_1 = np.concatenate((izq_madre[:, np.newaxis], der_padre), axis=1)
 hijo_2 = np.concatenate((izq_padre[:, np.newaxis], der_madre), axis=1)"""
 #creo que así se haría con random
-izq_madre = madre.estado[:, :cross_over]
-izq_padre = padre.estado[:, :cross_over]
-der_madre = madre.estado[:, cross_over:]
-der_padre = padre.estado[:, cross_over:]
+izq_madre = madre.estado[:, :cross_over+1]
+izq_padre = padre.estado[:, :cross_over+1]
+der_madre = madre.estado[:, cross_over+1:]
+der_padre = padre.estado[:, cross_over+1:]
 hijo_1 = Puzzle(estado=np.concatenate((izq_madre, der_padre), axis=1), heuristica=0, correctos=[])
 hijo_2= Puzzle(estado=np.concatenate((izq_padre, der_madre), axis=1), heuristica=0, correctos=[])
 hijo_1.estado = corregir_hijo(hijo_1.estado)

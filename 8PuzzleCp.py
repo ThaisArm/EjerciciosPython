@@ -5,7 +5,7 @@ import numpy as np
 MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
-maxima_recursion = 3
+maxima_recursion = 500
 cross_over = 0
 ruleta = [0]*100
 ruleta_mutacion = [0]*100
@@ -75,8 +75,8 @@ def girar_ruleta(ruleta):
     return ruleta[random.randint(0, 99)]-1
 
 def corregir_hijo(estado):
-      numeros_faltantes = set(range(9))
-      for i in range(len(estado)):
+    numeros_faltantes = set(range(9))
+    for i in range(len(estado)):
         for j in range(len(estado[0])):
             numero = estado[i, j]
             if numero in numeros_faltantes:
@@ -84,7 +84,7 @@ def corregir_hijo(estado):
             else:
                 nuevo_numero = numeros_faltantes.pop()
                 estado[i, j] = nuevo_numero
-      return estado
+    return estado
 
 #verificar si solo una ruleta o separadas
 #generar ruleta para la mutación (ver función de llenar ruleta)
@@ -112,17 +112,17 @@ def mutar(hijo):
         hijo_mutado.estado[posicion_cero[0]-1][posicion_cero[1]]=0
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
       #movimiento hacia abajo
-  elif posicion_cero[0]<=1:
+  if posicion_cero[0]<=1:
         numero_abajo=hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]
         hijo_mutado.estado[posicion_cero[0]+1][posicion_cero[1]]=0
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
       #movimiento hacia la izquierda
-  elif posicion_cero[1]>=1:
+  if posicion_cero[1]>=1:
         numero_izquierda=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]-1]=0
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
       #movimiento hacia la derecha
-  else:
+  if posicion_cero[1]<=1:
         numero_derecha=hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]+1]=0
         hijo_mutado.estado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
@@ -196,13 +196,13 @@ def encontrar_solucion(poblacion_inicial):
     #Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
       if(decision_hijo == 1):
-          """while comprobar_estado_usado(hijo_mutado):
-            hijo_mutado = mutar(hijo_mutado)"""  
-          hijo_1 = hijo_mutado   
+        hijo_1 = hijo_mutado
+        while comprobar_estado_usado_correcion(hijo_mutado.estado):
+          hijo_1 = hijo_mutado 
       else:
-          """while comprobar_estado_usado(hijo_mutado):
-            hijo_mutado = mutar(hijo_mutado) """
-          hijo_2 = hijo_mutado
+        hijo_2 = hijo_mutado
+        while comprobar_estado_usado_correcion(hijo_mutado.estado):
+          hijo_2 = hijo_mutado  
 
     #se eliminan todos los elementos? 
     poblacion_inicial.clear()
@@ -219,7 +219,7 @@ def encontrar_solucion(poblacion_inicial):
     #for i in range(len(poblacion_inicial)):
     #  print(poblacion_inicial[i].estado)
     global maxima_recursion
-    if comprobar_estado_objetivo(poblacion_inicial) or maxima_recursion==0:
+    if comprobar_estado_objetivo(poblacion_inicial):
       print("POBLACION")
       for i in range(len(poblacion_inicial)):
         print(poblacion_inicial[i].estado)

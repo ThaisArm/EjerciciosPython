@@ -184,7 +184,8 @@ if(len(hijo_mutado) != 0):
         hijo_1 = hijo_mutado
     else:
         hijo_2 = hijo_mutado
+#se eliminan todos los elementos?
 poblacion_inicial.clear()
 poblacion_inicial.extend([hijo_1, hijo_2])
-
+print(poblacion_inicial)
 

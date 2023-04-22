@@ -1,3 +1,5 @@
+""" EN EL DOCUMENTO 8PuzzleCp estoy intentando unirle pero me sale un bucle infinito, creo que es porque 
+no estoy controlando los estados que ya se usaron"""
 from collections import Counter
 import random
 import numpy as np
@@ -11,7 +13,6 @@ poblacion_inicial = []
 ruleta = [0]*100
 ruleta_mutacion = [0]*100
 correctos = []
-
 
 #verificar si solo una ruleta o separadas
 #generar ruleta para la mutación (ver función de llenar ruleta)
@@ -70,6 +71,7 @@ def generar_estados_iniciales():
         generar_estados_iniciales()
     else:
         return muestra
+    
 
 def calcular_probabilidad():
     total_errores_iniciales = sum(correctos)

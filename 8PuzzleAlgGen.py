@@ -37,6 +37,12 @@ class Puzzle:
         self.correctos = correctos
         self.probabilidad = 0
 
+def encontrar_cero(estado_actual):
+    for i in range(len(estado_actual)):
+        for j in range(len(estado_actual[0])):
+            if estado_actual[i][j]==0:
+                return [i,j]
+            
 def calculo_euristica(estado_inicial):
     sum = 0
     for i in range(len(estado_inicial)):
@@ -140,13 +146,37 @@ decision_clonar = ruleta_mutacion[random.randint(0, 99)]
 hijo_mutado = []
 if(decision_clonar == 1):
     decision_hijo = random.randint(1,2)
-    #print(decision_hijo)
+    print("Hijo a mutar: ",decision_hijo)
     if decision_hijo == 1:
       hijo_mutado = [row[:] for row in hijo_1]
     else:
       hijo_mutado = [row[:] for row in hijo_2]
-    #print(hijo_mutado)
+    posicion_cero = encontrar_cero(hijo_mutado)
+    print(hijo_mutado)
+    #Movimientos
+    #movimientos hacia arriba
+    if posicion_cero[0]>0:                
+      numero_arriba=hijo_mutado[posicion_cero[0]-1][posicion_cero[1]]
+      hijo_mutado[posicion_cero[0]-1][posicion_cero[1]]=0
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_arriba
+    
+    #movimiento hacia abajo
+    elif posicion_cero[0]<=1:
+      numero_abajo=hijo_mutado[posicion_cero[0]+1][posicion_cero[1]]
+      hijo_mutado[posicion_cero[0]+1][posicion_cero[1]]=0
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_abajo
+    #movimiento hacia la izquierda
+    elif posicion_cero[1]>=1:
+      numero_izquierda=hijo_mutado[posicion_cero[0]][posicion_cero[1]-1]
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]-1]=0
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_izquierda
+    #movimiento hacia la derecha
+    else:
+      numero_derecha=hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]+1]=0
+      hijo_mutado[posicion_cero[0]][posicion_cero[1]]=numero_derecha
 
+print(hijo_mutado)
 #Eliminar estados padres, agregar los hijos
 
 

@@ -46,7 +46,6 @@ def generar_estados_iniciales():
         correctos_generado = MAXIMO_ERRORES-heuristica_generado
         correctos.append(correctos_generado)
         muestra.append(Puzzle(estado_generado, heuristica_generado,correctos_generado))
-
         for row in muestra[i].estado:
             print(row)
         print("------------")
@@ -94,10 +93,14 @@ while(contador < 15):
       contador +=1
 #print(ruleta_mutacion)
 #print("Número de probabilidad de mutación = ",ruleta_mutacion.count(1))
+def comprobar_estado_objetivo(poblacion):
+  for i in range(len(poblacion)):
+    if np.all(poblacion[i].estado == estado_objetivo):
+      return True
+  return False
 
 #FUNCION
 def encontrar_solucion(poblacion_inicial):
-  #while pendiente 
     calcular_probabilidad(poblacion)
     for i in range(len(poblacion_inicial)):
       ruleta = [0]*100
@@ -187,9 +190,13 @@ def encontrar_solucion(poblacion_inicial):
     correctos.append(hijo_2.correctos)
     poblacion_inicial.extend([hijo_1, hijo_2])
     print("POBLACION")
-    for i in range(len(poblacion_inicial)):
-      print(poblacion_inicial[i].estado)
-  
+    #for i in range(len(poblacion_inicial)):
+    #  print(poblacion_inicial[i].estado)
+    if(comprobar_estado_objetivo(poblacion_inicial)):
+      return poblacion_inicial
+    else:
+      encontrar_solucion(poblacion_inicial)
+
 #EJECUCIÓN-----
 poblacion = generar_estados_iniciales()
 encontrar_solucion(poblacion)

@@ -137,6 +137,7 @@ print(hijo_2)
 #Decidir si clonar o no 
 decision_clonar = ruleta_mutacion[random.randint(0, 99)]
 #print(decision_clonar)
+hijo_mutado = []
 if(decision_clonar == 1):
     decision_hijo = random.randint(1,2)
     #print(decision_hijo)
@@ -145,6 +146,8 @@ if(decision_clonar == 1):
     else:
       hijo_mutado = [row[:] for row in hijo_2]
     #print(hijo_mutado)
+
+#Eliminar estados padres, agregar los hijos
 
 
 

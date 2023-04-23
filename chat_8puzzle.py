@@ -57,7 +57,7 @@ def corregir_hijo(estado):
 def crear_nueva_generacion(poblacion, heuristica):
     nueva_generacion = []
     tamaño_poblacion = len(poblacion)
-    seleccion_size = int(0.25 * tamaño_poblacion) # Seleccionar el 25% de los mejores individuos
+    seleccion_size = int(0.25 * tamaño_poblacion) # Generar 25% para cada hijo
     
     #----ya entendi lo de aqui abajo pero te lo dejo por si acaso-> total lo que hice fue cambiar el metodo para que 
     #en lugar de seleccionar el 50% de optimos solo selccione los padres al azar 

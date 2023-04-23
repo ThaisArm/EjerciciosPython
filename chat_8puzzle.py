@@ -75,7 +75,8 @@ def crear_nueva_generacion(poblacion, heuristica):
         #madre = random.choice(poblacion_seleccionada)
         padre = poblacion_seleccionada[0]
         madre = poblacion_seleccionada[1]
-
+        
+        #estatico o variable?
         crossover_point = random.randint(1, 7)
 
         hijo1 = np.concatenate((padre[:crossover_point,:], madre[crossover_point:,:]), axis=0)

@@ -5,6 +5,7 @@ tamaño_poblacion=50
 max_generaciones=200
 dimension_matriz=3
 crossover_point = random.randint(0, 1)
+print("CROOSOVER INICIAL", crossover_point)
 estado_objetivo=np.array([
     [0, 1, 2],
     [3, 4, 5],
@@ -70,7 +71,6 @@ def corregir_hijo(estado):
                 estado[i, j] = nuevo_numero
     return estado
 
-# Crear una nueva generación a partir de la selección y cruce de individuos
 def crear_nueva_generacion(poblacion, heuristica):
     nueva_generacion = []
     tamaño_poblacion = len(poblacion)
@@ -117,6 +117,89 @@ def crear_nueva_generacion(poblacion, heuristica):
                 hijo2[mutation_point1], hijo2[mutation_point2] = hijo2[mutation_point2], hijo2[mutation_point1]
                 hijo2 = corregir_hijo(hijo2)
 
+        nueva_generacion.append(hijo1)
+        nueva_generacion.append(hijo2)
+        #nueva_generacion.append(hijo)
+
+    #nueva_generacion += poblacion_seleccionada[:tamaño_poblacion - seleccion_size*2]
+    #aqui una vez que se llena con la nueva generacion con los hijos(50% esta lleno) se llena el otro 50% con el resto de la poblacion
+    #eso entiendo yo si le entiendes mejor me explicas porfis
+    nueva_generacion += poblacion[:tamaño_poblacion - seleccion_size*2]
+    return nueva_generacion
+
+# Crear una nueva generación a partir de la selección y cruce de individuos
+def crear_nueva_generacion1(poblacion, heuristica):
+    nueva_generacion = []
+    tamaño_poblacion = len(poblacion)
+    seleccion_size = int(0.25 * tamaño_poblacion) # Generar 25% para cada hijo
+    
+    #----ya entendi lo de aqui abajo pero te lo dejo por si acaso-> total lo que hice fue cambiar el metodo para que 
+    #en lugar de seleccionar el 50% de optimos solo selccione los padres al azar 
+    #v
+    #v
+    #poblacion_seleccionada = seleccion(poblacion, heuristica) #segun yo esta no sirve pero si le quito no encuentra resultado
+    #segun entiendo lo que hace es de la poblacion original como que gira la rueda y genera una nueva poblacion con 
+    #los que tienen mas probabilidades, con eso se va quedando con los mejores y de esos mejores escoger los padres
+    #aunque no me queda claro que pasa si hay repetidos creo que eso no controla
+
+    for i in range(seleccion_size):#le podemos explicar que es para acelerar el procesos en lugar de generar 2 hijos por iteracion generamos un 50%de hijos nuevos porque es 25% de cada hijo
+        poblacion_seleccionada = seleccion(poblacion, heuristica)
+        # falta controlar que no sean los mismo esto se hace en la funcion seleccion
+        #padre = random.choice(poblacion_seleccionada)
+        #madre = random.choice(poblacion_seleccionada)
+        padre = poblacion_seleccionada[0]
+        madre = poblacion_seleccionada[1]
+        hijo1 = np.concatenate((padre[:crossover_point+1,:], madre[crossover_point+1:,:]), axis=0)
+        hijo2 = np.concatenate((madre[:crossover_point+1,:], padre[crossover_point+1:,:]), axis=0)
+        print("CROOSOVER", crossover_point)
+        print("MADRE", madre)
+        print("PADRE", padre)
+        print("HIJO 1",hijo1)
+        print("HIJO 2", hijo2)
+        #hijo = np.vstack((padre[:crossover_point,:], madre[crossover_point:,:]))
+
+        #corregir
+        hijo1 = corregir_hijo(hijo1)
+        hijo2 = corregir_hijo(hijo2)
+        print("HIJO 1 c",hijo1)
+        print("HIJO 2 c", hijo2)
+        probabilidad_mutacion = 0.2 # Probabilidad de mutación
+
+        #la mutacion no se maneja con el 0 selecciona 2 fichas al azar e intercambia su posicion
+        #falta que seleccion un hijo al azar en lugar de solo seleccionar el hijo1
+        if random.random() < probabilidad_mutacion:
+            # Encontrar la posición del cero
+          hijo_a_mutar = random.randint(1,2)
+          if hijo_a_mutar == 1:
+              cero_pos = np.where(hijo1 == 0)
+          else:
+              cero_pos = np.where(hijo2 == 0)
+            # Encontrar las posiciones válidas para mutar
+          vecinos_validos = []
+          if cero_pos[0] > 0:
+                  vecinos_validos.append((cero_pos[0]-1, cero_pos[1]))  # vecino superior
+          if cero_pos[0] < 2:
+                  vecinos_validos.append((cero_pos[0]+1, cero_pos[1]))  # vecino inferior
+          if cero_pos[1] > 0:
+                  vecinos_validos.append((cero_pos[0], cero_pos[1]-1))  # vecino izquierdo
+          if cero_pos[1] < 2:
+                  vecinos_validos.append((cero_pos[0], cero_pos[1]+1))  # vecino derecho
+
+          if vecinos_validos:
+                # Mutar un vecino válido aleatoriamente
+                mutation_point1 = random.choice(vecinos_validos)
+                mutation_point2 = random.choice(vecinos_validos)
+                print("Hijo a mutar: ",hijo_a_mutar)
+                if hijo_a_mutar == 1:                  
+                      print("Hijo 1 antes: ",hijo1)
+                      hijo1[mutation_point1], hijo1[mutation_point2] = hijo1[mutation_point2], hijo1[mutation_point1]
+                      hijo1 = corregir_hijo(hijo1)
+                      print("Hijo 1 despues: ",hijo1)
+                else:                     
+                      print("Hijo 2 antes: ",hijo2)
+                      hijo2[mutation_point1], hijo2[mutation_point2] = hijo2[mutation_point2], hijo2[mutation_point1]
+                      hijo2 = corregir_hijo(hijo2)
+                      print("Hijo 2 des: ",hijo2)
         nueva_generacion.append(hijo1)
         nueva_generacion.append(hijo2)
         #nueva_generacion.append(hijo)

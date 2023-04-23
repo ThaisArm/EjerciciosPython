@@ -1,8 +1,8 @@
 import random
 import numpy as np
 
-tamaño_poblacion=300
-max_generaciones=300
+tamaño_poblacion=50
+max_generaciones=200
 dimension_matriz=3
 
 estado_objetivo=np.array([
@@ -33,29 +33,77 @@ def seleccion(poblacion, heuristica):
     heuristica_sum = sum(heuristica)
     probabilidad = [f/heuristica_sum for f in heuristica]
     poblacion_seleccionada = []
-    for i in range(len(poblacion)):
+    #podemos intentar contrlar que no escoja estados iguales
+    for i in range(2):
         estado_seleccionado = random.choices(poblacion, weights=probabilidad)
         poblacion_seleccionada.append(estado_seleccionado[0])
+        print(estado_seleccionado)
+        #print("--------")
     return poblacion_seleccionada
+
+def corregir_hijo(estado):
+    numeros_faltantes = set(range(9))
+    for i in range(len(estado)):
+        for j in range(len(estado[0])):
+            numero = estado[i, j]
+            if numero in numeros_faltantes:
+                numeros_faltantes.remove(numero)
+            else:
+                nuevo_numero = numeros_faltantes.pop()
+                estado[i, j] = nuevo_numero
+    return estado
 
 # Crear una nueva generación a partir de la selección y cruce de individuos
 def crear_nueva_generacion(poblacion, heuristica):
     nueva_generacion = []
     tamaño_poblacion = len(poblacion)
-    seleccion_size = int(0.5 * tamaño_poblacion) # Seleccionar el 50% de los mejores individuos
-    poblacion_seleccionada = seleccion(poblacion, heuristica)
-    for i in range(seleccion_size):
-        padre = random.choice(poblacion_seleccionada)
-        madre = random.choice(poblacion_seleccionada)
+    seleccion_size = int(0.25 * tamaño_poblacion) # Seleccionar el 25% de los mejores individuos
+    
+    #----ya entendi lo de aqui abajo pero te lo dejo por si acaso-> total lo que hice fue cambiar el metodo para que 
+    #en lugar de seleccionar el 50% de optimos solo selccione los padres al azar 
+    #v
+    #v
+    #poblacion_seleccionada = seleccion(poblacion, heuristica) #segun yo esta no sirve pero si le quito no encuentra resultado
+    #segun entiendo lo que hace es de la poblacion original como que gira la rueda y genera una nueva poblacion con 
+    #los que tienen mas probabilidades, con eso se va quedando con los mejores y de esos mejores escoger los padres
+    #aunque no me queda claro que pasa si hay repetidos creo que eso no controla
+
+    for i in range(seleccion_size):#le podemos explicar que es para acelerar el procesos en lugar de generar 2 hijos por iteracion generamos un 50%de hijos nuevos porque es 25% de cada hijo
+        poblacion_seleccionada = seleccion(poblacion, heuristica)
+        # falta controlar que no sean los mismo esto se hace en la funcion seleccion
+        #padre = random.choice(poblacion_seleccionada)
+        #madre = random.choice(poblacion_seleccionada)
+        padre = poblacion_seleccionada[0]
+        madre = poblacion_seleccionada[1]
+
         crossover_point = random.randint(1, 7)
-        hijo = np.vstack((padre[:crossover_point,:], madre[crossover_point:,:]))
+
+        hijo1 = np.concatenate((padre[:crossover_point,:], madre[crossover_point:,:]), axis=0)
+        hijo2 = np.concatenate((madre[:crossover_point,:], padre[crossover_point:,:]), axis=0)
+        #hijo = np.vstack((padre[:crossover_point,:], madre[crossover_point:,:]))
+
+        #corregir
+        hijo1 = corregir_hijo(hijo1)
+        hijo2 = corregir_hijo(hijo2)
+
         probabilidad_mutacion = 0.2 # Probabilidad de mutación
+
+        #la mutacion no se maneja con el 0 selecciona 2 fichas al azar e intercambia su posicion
+        #falta que seleccion un hijo al azar en lugar de solo seleccionar el hijo1
         if random.random() < probabilidad_mutacion:
             mutation_point1 = tuple(np.random.choice(3, size=2))
             mutation_point2 = tuple(np.random.choice(3, size=2))
-            hijo[mutation_point1], hijo[mutation_point2] = hijo[mutation_point2], hijo[mutation_point1]
-        nueva_generacion.append(hijo)
-    nueva_generacion += poblacion_seleccionada[:tamaño_poblacion - seleccion_size]
+            hijo1[mutation_point1], hijo1[mutation_point2] = hijo1[mutation_point2], hijo1[mutation_point1]
+            hijo1 = corregir_hijo(hijo1)
+
+        nueva_generacion.append(hijo1)
+        nueva_generacion.append(hijo2)
+        #nueva_generacion.append(hijo)
+
+    #nueva_generacion += poblacion_seleccionada[:tamaño_poblacion - seleccion_size*2]
+    #aqui una vez que se llena con la nueva generacion con los hijos(50% esta lleno) se llena el otro 50% con el resto de la poblacion
+    #eso entiendo yo si le entiendes mejor me explicas
+    nueva_generacion += poblacion[:tamaño_poblacion - seleccion_size*2]
     return nueva_generacion
 
 # Algoritmo genético principal
@@ -78,6 +126,6 @@ def encontrar_solucion():
     print("Solución no encontrada.")
     return None
 
-# Ejecutar el algoritmo genético con una población inicial de 100 individuos, un máximo de 100 generaciones y una matriz de 3x3
+# Ejecutar el algoritmo genético con una población inicial de 300 individuos, un máximo de 300 generaciones y una matriz de 3x3
 solution = encontrar_solucion()
 print("Solución encontrada:\n", solution)

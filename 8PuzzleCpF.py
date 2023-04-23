@@ -3,11 +3,12 @@ import random
 import numpy as np
 
 MAXIMO_ERRORES = 8
-NUMERO_ESTADOS_INICIALES = 10
+NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
 cross_over = random.randint(0, 1)
 ruleta_mutacion = [0]*100
 ruleta = [0]*100
+maxima_profundidad = 600
 #Por qué el arreglo de correctos?
 correctos = []
 estado_objetivo=np.array([
@@ -77,7 +78,7 @@ def girar_ruleta(ruleta):
 #verificar si solo una ruleta o separadas?
 #generar ruleta para la mutación (ver si se puede unir a la función de llenar ruleta)
 contador = 0
-while(contador < 15):
+while(contador < PROBABILIDAD_MUTACION):
   posicion = random.randint(0, 99)
   if ruleta_mutacion[posicion] == 0:
       ruleta_mutacion[posicion] = 1
@@ -108,8 +109,6 @@ def comprobar_estado_usado(estado):
       return True
   return False
 
-import random
-
 def mutar(hijo):
     hijo_mutado = Puzzle(estado=[], heuristica=0, correctos=[])
     hijo_mutado.estado = hijo.estado.copy()
@@ -117,7 +116,7 @@ def mutar(hijo):
     contador_movimientos = 0  # contador de movimientos realizados
     ultimo_movimiento = None  # registro del último movimiento realizado
 
-    while contador_movimientos < MAXIMO_ERRORES:  # realizar 8 movimientos
+    while contador_movimientos <= MAXIMO_ERRORES:  # realizar 8 movimientos
         # Movimientos
         movimientos_disponibles = []  # lista de movimientos disponibles
         # movimiento hacia arriba
@@ -229,14 +228,14 @@ def encontrar_solucion(poblacion_inicial):
         hijo_mutado = mutar(hijo_2)   
 #   Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
-      if(decision_hijo == 1):
-        hijo_1 = hijo_mutado
-        while comprobar_estado_usado(hijo_mutado.estado):
-          hijo_1 = hijo_mutado 
-      else:
-        hijo_2 = hijo_mutado
-        while comprobar_estado_usado(hijo_mutado.estado):
-          hijo_2 = hijo_mutado  
+        if(decision_hijo == 1):
+          hijo_1 = hijo_mutado
+          """ while comprobar_estado_usado(hijo_mutado.estado):
+          hijo_1 = hijo_mutado""" 
+        else:
+          hijo_2 = hijo_mutado
+        """while comprobar_estado_usado(hijo_mutado.estado):
+          hijo_2 = hijo_mutado  """
 
     #se eliminan todos los elementos???
     a = ganador_p-1
@@ -252,18 +251,20 @@ def encontrar_solucion(poblacion_inicial):
     correctos.append(hijo_2.correctos)
     estados_usados.append(hijo_2.estado)
     poblacion_inicial.extend([hijo_1, hijo_2])
-    if comprobar_estado_objetivo(poblacion_inicial):
+    global maxima_profundidad
+    if comprobar_estado_objetivo(poblacion_inicial) or maxima_profundidad==0:
       print("POBLACION")
       for i in range(len(poblacion_inicial)):
-        print(poblacion_inicial[i].estado)
+        print(poblacion_inicial[i].estado, "HEURÍSTICA =", poblacion_inicial[i].heuristica)
       return
     else:
+      maxima_profundidad -= 1
       encontrar_solucion(poblacion_inicial)
 
 #EJECUCIÓN-----
 poblacion = generar_estados_iniciales()
-try:  
-  encontrar_solucion(poblacion)
-except:
-  print("----NO HAY SOLUCIÓN-----")
+#try:  
+encontrar_solucion(poblacion)
+#except:
+#  print("----NO HAY SOLUCIÓN-----")
 

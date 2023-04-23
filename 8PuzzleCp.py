@@ -5,7 +5,6 @@ import numpy as np
 MAXIMO_ERRORES = 8
 NUMERO_ESTADOS_INICIALES = 5
 PROBABILIDAD_MUTACION = 15
-maxima_recursion = 500
 cross_over = random.randint(0, 1)
 ruleta = [0]*100
 ruleta_mutacion = [0]*100
@@ -102,45 +101,56 @@ def comprobar_estado_objetivo(poblacion):
       return True
   return False
 
-def mutar(hijo):
-    posicion_cero = encontrar_cero(hijo.estado)
-    copia_arriba= [row[:] for row in hijo.estado]
-    copia_abajo =[row[:] for row in hijo.estado]
-    copia_izquierda = [row[:] for row in hijo.estado]
-    copia_derecha =[row[:] for row in hijo.estado]
-    # Movimientos
-   #movimientos hacia arriba
-    if posicion_cero[0]>0:                
-        numer_arriba=hijo.estado[posicion_cero[0]-1][posicion_cero[1]]
-        copia_arriba[posicion_cero[0]-1][posicion_cero[1]]=0
-        copia_arriba[posicion_cero[0]][posicion_cero[1]]=numer_arriba
-        estado_mutado = copia_arriba.copy()
+def mutar(estado_padre):
+    # Encontrar la posición del cero en el estado del padre
+    posicion_cero = encontrar_cero(estado_padre)
 
-    #movimiento hacia abajo
-    if posicion_cero[0]<=1:
-        numer_abajo=hijo.estado[posicion_cero[0]+1][posicion_cero[1]]
-        copia_abajo[posicion_cero[0]+1][posicion_cero[1]]=0
-        copia_abajo[posicion_cero[0]][posicion_cero[1]]=numer_abajo
-        estado_mutado = copia_abajo.copy()
+    # Crear una copia del estado del padre
+    nuevo_estado = np.copy(estado_padre)
 
-    #movimiento hacia la izquierda
-    if posicion_cero[1]>=1:
-        numer_izquierda=hijo.estado[posicion_cero[0]][posicion_cero[1]-1]
-        copia_izquierda[posicion_cero[0]][posicion_cero[1]-1]=0
-        copia_izquierda[posicion_cero[0]][posicion_cero[1]]=numer_izquierda
-        estado_mutado = copia_izquierda.copy()
+    # Movimiento hacia arriba
+    if posicion_cero[0] > 0:
+        # Intercambiar el valor actual del cero con el valor de arriba
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]] = nuevo_estado[posicion_cero[0]-1][posicion_cero[1]]
+        nuevo_estado[posicion_cero[0]-1][posicion_cero[1]] = 0
+        # Actualizar la posición del cero
+        posicion_cero = (posicion_cero[0]-1, posicion_cero[1])
+        # Devolver el nuevo estado
+        print(nuevo_estado)
+        return nuevo_estado
 
-    #movimiento hacia la derecha
-    if posicion_cero[1]<=1:
-        numer_derecha=hijo.estado[posicion_cero[0]][posicion_cero[1]+1]
-        copia_derecha[posicion_cero[0]][posicion_cero[1]+1]=0
-        copia_derecha[posicion_cero[0]][posicion_cero[1]]=numer_derecha
-        estado_mutado = copia_derecha.copy()
-    print(estado_mutado)
-    return estado_mutado
+    # Movimiento hacia abajo
+    if posicion_cero[0] < 2:
+        # Intercambiar el valor actual del cero con el valor de abajo
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]] = nuevo_estado[posicion_cero[0]+1][posicion_cero[1]]
+        nuevo_estado[posicion_cero[0]+1][posicion_cero[1]] = 0
+        # Actualizar la posición del cero
+        posicion_cero = (posicion_cero[0]+1, posicion_cero[1])
+        # Devolver el nuevo estado
+        print(nuevo_estado)   
+        return nuevo_estado
 
+    # Movimiento hacia la izquierda
+    if posicion_cero[1] > 0:
+        # Intercambiar el valor actual del cero con el valor de la izquierda
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]] = nuevo_estado[posicion_cero[0]][posicion_cero[1]-1]
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]-1] = 0
+        # Actualizar la posición del cero
+        posicion_cero = (posicion_cero[0], posicion_cero[1]-1)
+        print(nuevo_estado)
+        # Devolver el nuevo estado
+        return nuevo_estado
 
-
+    # Movimiento hacia la derecha
+    if posicion_cero[1] < 2:
+        # Intercambiar el valor actual del cero con el valor de la derecha
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]] = nuevo_estado[posicion_cero[0]][posicion_cero[1]+1]
+        nuevo_estado[posicion_cero[0]][posicion_cero[1]+1] = 0
+        # Actualizar la posición del cero
+        posicion_cero = (posicion_cero[0], posicion_cero[1]+1)
+        # Devolver el nuevo estado
+        print(nuevo_estado)
+        return nuevo_estado
 
 #comprobar estado_usado
 def comprobar_estado_usado(hijo):
@@ -204,20 +214,23 @@ def encontrar_solucion(poblacion_inicial):
       decision_hijo = random.randint(1,2)
       print("Hijo a mutar: ",decision_hijo)
       if decision_hijo == 1:
-        hijo_mutado.estado = mutar(hijo_1)
+        hijo_mutado.estado = mutar(hijo_1.estado)
       else:
-        hijo_mutado.estado = mutar(hijo_2)   
+        hijo_mutado.estado = mutar(hijo_2.estado)   
     #Eliminar estados padres, agregar los hijos
     if(len(hijo_mutado.estado) != 0):
       if(decision_hijo == 1):
-        while comprobar_estado_usado_correcion(hijo_mutado.estado):
+        #while comprobar_estado_usado_correcion(hijo_mutado.estado):
           hijo_1 = hijo_mutado 
       else:
-        while comprobar_estado_usado_correcion(hijo_mutado.estado):
+        #while comprobar_estado_usado_correcion(hijo_mutado.estado):
           hijo_2 = hijo_mutado  
 
     #se eliminan todos los elementos? 
-    poblacion_inicial.clear()
+    a = ganador_p-1
+    b = ganador_m-1
+    poblacion_inicial.pop(a)
+    poblacion_inicial.pop(b)
     hijo_1.heuristica = calculo_euristica(hijo_1.estado)
     hijo_1.correctos = MAXIMO_ERRORES-hijo_1.heuristica
     correctos.append(hijo_1.correctos)
@@ -230,20 +243,18 @@ def encontrar_solucion(poblacion_inicial):
     #print("POBLACION")
     #for i in range(len(poblacion_inicial)):
     #  print(poblacion_inicial[i].estado)
-    global maxima_recursion
     if comprobar_estado_objetivo(poblacion_inicial):
       print("POBLACION")
       for i in range(len(poblacion_inicial)):
         print(poblacion_inicial[i].estado)
       return
     else:
-      maxima_recursion-=1
       encontrar_solucion(poblacion_inicial)
 
 #EJECUCIÓN-----
 poblacion = generar_estados_iniciales()
-#try:  
-encontrar_solucion(poblacion)
-#except:
-#print("----NO HAY SOLUCIÓN-----")
+try:  
+  encontrar_solucion(poblacion)
+except:
+  print("----NO HAY SOLUCIÓN-----")
 #print(estados_usados)

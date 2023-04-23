@@ -102,7 +102,7 @@ def crear_nueva_generacion(poblacion, heuristica):
 
     #nueva_generacion += poblacion_seleccionada[:tamaño_poblacion - seleccion_size*2]
     #aqui una vez que se llena con la nueva generacion con los hijos(50% esta lleno) se llena el otro 50% con el resto de la poblacion
-    #eso entiendo yo si le entiendes mejor me explicas
+    #eso entiendo yo si le entiendes mejor me explicas porfis
     nueva_generacion += poblacion[:tamaño_poblacion - seleccion_size*2]
     return nueva_generacion
 

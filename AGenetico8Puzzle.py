@@ -39,6 +39,7 @@ def controlar_estado_seleccion(madre, padre):
 def seleccion(poblacion, heuristica):
     heuristica_sum = sum(heuristica)
     probabilidad = [f/heuristica_sum for f in heuristica]
+    #print(probabilidad)
     poblacion_seleccionada = []
     
     # Seleccionar primer estado

@@ -1,7 +1,7 @@
 import random
 import numpy as np
 
-tamaño_poblacion=50
+tamanio_poblacion=50
 max_generaciones=200
 dimension_matriz=3
 crossover_point = random.randint(0, 1)
@@ -12,7 +12,7 @@ estado_objetivo=np.array([
 ])
 
 # Definir la función de heurística
-def heuristica(estado, estado_objetivo):
+def heuristica(estado):
     heuristica = 0
     for i in range(3):
         for j in range(3):
@@ -68,8 +68,8 @@ def corregir_hijo(estado):
 # Crear una nueva generación a partir de la selección y cruce de individuos
 def crear_nueva_generacion(poblacion, heuristica):
     nueva_generacion = []
-    tamaño_poblacion = len(poblacion)
-    seleccion_size = int(0.25 * tamaño_poblacion) # Generar 25% para cada hijo
+    tamanio_poblacion = len(poblacion)
+    seleccion_size = int(0.25 * tamanio_poblacion) # Generar 25% para cada hijo
     
     for i in range(seleccion_size):
         poblacion_seleccionada = seleccion(poblacion, heuristica)
@@ -99,14 +99,14 @@ def crear_nueva_generacion(poblacion, heuristica):
         nueva_generacion.append(hijo1)
         nueva_generacion.append(hijo2)
 
-    nueva_generacion += poblacion[:tamaño_poblacion - seleccion_size*2]
+    nueva_generacion += poblacion[:tamanio_poblacion - seleccion_size*2]
     return nueva_generacion
 
 # Algoritmo genético principal
 def encontrar_solucion():
-    poblacion = crear_poblacion_inicial(tamaño_poblacion)
+    poblacion = crear_poblacion_inicial(tamanio_poblacion)
     for i in range(max_generaciones):
-        heuristica_valores = [heuristica(estado, estado_objetivo) for estado in poblacion]
+        heuristica_valores = [heuristica(estado) for estado in poblacion]
         max_heuristica = max(heuristica_valores)
         print(f"Generación {i}, heuristica máximo: {max_heuristica}")
         #for estado in poblacion:

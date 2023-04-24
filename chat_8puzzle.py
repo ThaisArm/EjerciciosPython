@@ -12,7 +12,7 @@ estado_objetivo=np.array([
 ])
 
 # Definir la función de heuristica
-def heuristica(estado, estado_objetivo):
+def heuristica(estado):
     heuristica = 0
     for i in range(3):
         for j in range(3):
@@ -132,7 +132,7 @@ def encontrar_solucion():
     #estado_objetivo = np.arange(dimension_matriz**2).reshape((dimension_matriz, dimension_matriz))
     poblacion = crear_poblacion_inicial(tamaño_poblacion)
     for i in range(max_generaciones):
-        heuristica_valores = [heuristica(estado, estado_objetivo) for estado in poblacion]
+        heuristica_valores = [heuristica(estado) for estado in poblacion]
         max_heuristica = max(heuristica_valores)
         print(f"Generación {i}, heuristica máximo: {max_heuristica}")
         #for estado in poblacion:

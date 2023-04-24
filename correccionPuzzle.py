@@ -8,13 +8,13 @@
 
 #GRUPO F: Allauca Yadira, Armijos Thais
 #euristica: numero de ubicaciones malas
-estado_inicial=[
+estado_inicial_0=[
     [7, 2, 4],
     [5, 0, 6],
     [8, 3, 1]
 ]
 
-estado_inicial_1=[
+estado_inicial=[
     [1, 2, 5],
     [7, 6, 4],
     [3, 8, 0]
@@ -135,31 +135,3 @@ for row in hallar_solucion(nodo_inicial).estado:
         print(row)
 #print(hallar_solucion(nodo_inicial).estado)
 
-
-
-#def abrir(nodo)
-    #si nodo.f !=0 -------tal vez no
-        #nodoOptimo = nodo
-        #genera los hijos
-        #hijos = generarHijos(nodo)
-        
-        #guarda los hijos en la lista de hojas
-        #hojas.append(hijos)
-
-        ##calcula la euristica de los miembros del arreglo de hojas
-        #por cada hoja de hojas
-            #hoja.h = calcularHeuristica(hoja)
-            #calcula f de todos los nosodos hoja
-            #hoja.f = hoja.g+hoja.h
-            #fTotales.append(hoja.f)
-
-        #saca al mas optimo de la lista de hojas
-        #for i in range(len(fTotales))
-            #si fTotales[i] <= ftotales[i+1]
-                #nodoOptimo = hojas.[i]
-            #si no 
-                #nodoOptimo = hojas.[i+1]
-
-        #hojas.quitar(nodoOptimo)
-        #nodo = abrir(nodoOptimo)
-    #return nodo

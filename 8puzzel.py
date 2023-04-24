@@ -92,7 +92,7 @@ def encontrar_solucion(estado_inicial):
 
         return movimientos
 
-    # Inicializar la cola FIFO con el nodo inicial
+    # Inicializar con el nodo inicial
     
     node_inicial = Node(0, calculo_euristica(estado_inicial), estado_inicial)
     h_nodo = calculo_euristica(node_inicial.estado) 

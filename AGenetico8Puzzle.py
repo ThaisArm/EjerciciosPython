@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 tamanio_poblacion=50
-max_generaciones=200
+max_generaciones=300
 dimension_matriz=3
 crossover_point = random.randint(0, 1)
 estado_objetivo=np.array([
@@ -116,11 +116,12 @@ def encontrar_solucion():
         #print(".........................")
         if max_heuristica == dimension_matriz**2:
             print(f"Solución encontrada en la generación {i}")
+
             return poblacion[heuristica_valores.index(max_heuristica)]
         poblacion = crear_nueva_generacion(poblacion, heuristica_valores)
     print("Solución no encontrada.")
     return None
 
-# Ejecutar el algoritmo genético con una población inicial de 300 individuos, un máximo de 300 generaciones y una matriz de 3x3
+# Ejecutar el algoritmo genético``
 solution = encontrar_solucion()
 print("Solución encontrada:\n", solution)

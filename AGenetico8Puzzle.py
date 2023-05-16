@@ -86,7 +86,7 @@ def crear_nueva_generacion(poblacion, heuristica):
 
         probabilidad_mutacion = 0.2 # Probabilidad de mutación
 
-        if random.random() < probabilidad_mutacion:
+        if random.random() <= probabilidad_mutacion:
             mutation_point1 = tuple(np.random.choice(3, size=2))
             mutation_point2 = tuple(np.random.choice(3, size=2))
             hijo_a_mutar = random.randint(1,2)
@@ -96,11 +96,18 @@ def crear_nueva_generacion(poblacion, heuristica):
             else:
                 hijo2[mutation_point1], hijo2[mutation_point2] = hijo2[mutation_point2], hijo2[mutation_point1]
                 hijo2 = corregir_hijo(hijo2)
+        
+        print("MADRE", madre)
+        print("PADRE", padre)
+        print("HIJO 1",hijo1)
+        print("HIJO 2", hijo2)
 
         nueva_generacion.append(hijo1)
         nueva_generacion.append(hijo2)
 
     nueva_generacion += poblacion[:tamanio_poblacion - seleccion_size*2]
+    for i in range(len(nueva_generacion)):
+        print(nueva_generacion[i])
     return nueva_generacion
 
 # Algoritmo genético principal

@@ -8,9 +8,8 @@ wumpus(1, 2).
 :- dynamic explorador/2.
 
 posicion_inicial(X,Y):-retractall(explorador(_,_)), assert(explorador(X,Y)).
-ver_posicion(X,Y):-call(explorador(X,Y)).
-adyacente(X1, Y1, X2, Y2) :- (X1 =:= X2, abs(Y1 - Y2) =:= 1) ; (Y1 =:= Y2, abs(X1 - X2) =:= 1).
 
+adyacente(X1, Y1, X2, Y2) :- (X1 =:= X2, abs(Y1 - Y2) =:= 1) ; (Y1 =:= Y2, abs(X1 - X2) =:= 1).
 
 mover_arriba(X, Y) :- X > 0, X1 is X - 1, assert(explorador(X1,Y)),retract(explorador(X,Y)),!.
 mover_abajo(X, Y) :- X < 4, X1 is X + 1, assert(explorador(X1,Y)),retract(explorador(X,Y)),!.

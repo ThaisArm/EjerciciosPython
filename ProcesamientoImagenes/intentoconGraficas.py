@@ -104,4 +104,3 @@ boton_valores_por_defecto.pack(pady=5)
 
 # Ejecutar la aplicación
 ventana.mainloop()
-

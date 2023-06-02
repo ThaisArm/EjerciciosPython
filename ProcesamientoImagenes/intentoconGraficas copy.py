@@ -3,7 +3,7 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 
 def cargar_imagen():
-    ruta_imagen = filedialog.askopenfilename(filetypes=(("Archivos de imagen", "*.jpg;*.png;*.jpeg"), ("Todos los archivos", "*.*")))
+    ruta_imagen = filedialog.askopenfilename(filetypes=(("Archivos de imagen", ".jpg;.png;.jpeg"), ("Todos los archivos", ".*")))
     if ruta_imagen:
         global imagen_original
         imagen_original = Image.open(ruta_imagen)

@@ -131,7 +131,7 @@ scale_b = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=mo
 scale_b.pack(pady=5)
 
 # Crear el botón para establecer valores por defecto
-boton_valores_por_defecto = tk.Button(ventana, text="Restaurar", command=establecer_valores_por_defecto)
+boton_valores_por_defecto = tk.Button(ventana, text="Imagen Inicial", command=establecer_valores_por_defecto)
 boton_valores_por_defecto.pack(pady=5)
 
 # Ejecutar la aplicación

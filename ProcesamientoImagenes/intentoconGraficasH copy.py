@@ -22,7 +22,6 @@ def cargar_valores_rgb(imagen):
     scale_r.set(valor_r)
     scale_g.set(valor_g)
     scale_b.set(valor_b)
-    modificar_imagen()
 
 def generar_histogramas(imagen):
     r, g, b = imagen.split()
@@ -96,15 +95,15 @@ label_imagen_original = tk.Label(frame_imagenes)
 label_imagen_original.pack(side=tk.LEFT, padx=10, pady=10)
 
 # Label para mostrar imagen R
-label_imagen_r = tk.Label(frame_imagenes, text="Imagen R")
+label_imagen_r = tk.Label(frame_imagenes)
 label_imagen_r.pack(side=tk.LEFT, padx=10)
 
 # Label para mostrar imagen G
-label_imagen_g = tk.Label(frame_imagenes, text="Imagen G")
+label_imagen_g = tk.Label(frame_imagenes)
 label_imagen_g.pack(side=tk.LEFT, padx=10)
 
 # Label para mostrar imagen B
-label_imagen_b = tk.Label(frame_imagenes, text="Imagen B")
+label_imagen_b = tk.Label(frame_imagenes)
 label_imagen_b.pack(side=tk.LEFT, padx=10)
 
 # Label para mostrar imagen modificada
@@ -115,12 +114,34 @@ label_imagen_modificada.pack(side=tk.LEFT, padx=10, pady=10)
 frame_histogramas = tk.Frame(ventana)
 frame_histogramas.pack()
 
+# Label para el título del histograma R
+label_titulo_r = tk.Label(frame_histogramas, text="R")
+label_titulo_r.pack(side=tk.LEFT, padx=10)
+
 canvas_histograma_r = tk.Canvas(frame_histogramas, width=256, height=100)
 canvas_histograma_r.pack(side=tk.LEFT, padx=10)
+
+# Label para el título del histograma G
+label_titulo_g = tk.Label(frame_histogramas, text="G")
+label_titulo_g.pack(side=tk.LEFT, padx=10)
+
 canvas_histograma_g = tk.Canvas(frame_histogramas, width=256, height=100)
 canvas_histograma_g.pack(side=tk.LEFT, padx=10)
+
+# Label para el título del histograma B
+label_titulo_b = tk.Label(frame_histogramas, text="B")
+label_titulo_b.pack(side=tk.LEFT, padx=10)
+
 canvas_histograma_b = tk.Canvas(frame_histogramas, width=256, height=100)
 canvas_histograma_b.pack(side=tk.LEFT, padx=10)
+
+# Labels para los nombres de los valores RGB
+label_nombre_r = tk.Label(ventana, text="Valor R:")
+label_nombre_r.pack(pady=5)
+label_nombre_g = tk.Label(ventana, text="Valor G:")
+label_nombre_g.pack(pady=5)
+label_nombre_b = tk.Label(ventana, text="Valor B:")
+label_nombre_b.pack(pady=5)
 
 # Scales para ajustar los valores RGB
 scale_r = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
@@ -130,8 +151,9 @@ scale_g.pack(pady=5)
 scale_b = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_b.pack(pady=5)
 
+
 # Crear el botón para establecer valores por defecto
-boton_valores_por_defecto = tk.Button(ventana, text="Restaurar", command=establecer_valores_por_defecto)
+boton_valores_por_defecto = tk.Button(ventana, text="Estado Inicial", command=establecer_valores_por_defecto)
 boton_valores_por_defecto.pack(pady=5)
 
 # Ejecutar la aplicación

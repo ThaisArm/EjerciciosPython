@@ -135,14 +135,6 @@ label_titulo_b.pack(side=tk.LEFT, padx=10)
 canvas_histograma_b = tk.Canvas(frame_histogramas, width=256, height=100)
 canvas_histograma_b.pack(side=tk.LEFT, padx=10)
 
-# Labels para los nombres de los valores RGB
-label_nombre_r = tk.Label(ventana, text="Valor R:")
-label_nombre_r.pack(pady=5)
-label_nombre_g = tk.Label(ventana, text="Valor G:")
-label_nombre_g.pack(pady=5)
-label_nombre_b = tk.Label(ventana, text="Valor B:")
-label_nombre_b.pack(pady=5)
-
 # Scales para ajustar los valores RGB
 scale_r = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_r.pack(pady=5)
@@ -150,7 +142,6 @@ scale_g = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=mo
 scale_g.pack(pady=5)
 scale_b = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_b.pack(pady=5)
-
 
 # Crear el botón para establecer valores por defecto
 boton_valores_por_defecto = tk.Button(ventana, text="Estado Inicial", command=establecer_valores_por_defecto)

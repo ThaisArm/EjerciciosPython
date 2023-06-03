@@ -12,7 +12,6 @@ def cargar_imagen():
         label_imagen_original.configure(image=imagen_tk)
         label_imagen_original.image = imagen_tk
         cargar_valores_rgb(imagen_original)
-        generar_histogramas(imagen_original)
 
 def cargar_valores_rgb(imagen):
     r, g, b = imagen.split()
@@ -23,25 +22,6 @@ def cargar_valores_rgb(imagen):
     scale_g.set(valor_g)
     scale_b.set(valor_b)
     modificar_imagen()
-
-def generar_histogramas(imagen):
-    r, g, b = imagen.split()
-    histograma_r = r.histogram()
-    histograma_g = g.histogram()
-    histograma_b = b.histogram()
-    mostrar_histograma(histograma_r, canvas_histograma_r)
-    mostrar_histograma(histograma_g, canvas_histograma_g)
-    mostrar_histograma(histograma_b, canvas_histograma_b)
-
-def mostrar_histograma(histograma, canvas):
-    canvas.delete("all")
-    max_valor = max(histograma)
-    ancho = 256
-    altura = 100
-    for i, valor in enumerate(histograma):
-        height = int(valor * altura / max_valor)
-        canvas.create_line(i, altura, i, altura - height, fill="black")
-    canvas.pack()
 
 def modificar_imagen(*args):
     valor_r = scale_r.get()
@@ -58,7 +38,6 @@ def modificar_imagen(*args):
     label_imagen_modificada.configure(image=imagen_tk)
     label_imagen_modificada.image = imagen_tk
     mostrar_imagenes_rgb(r, g, b)
-    generar_histogramas(imagen_modificada)
 
 def mostrar_imagenes_rgb(imagen_r, imagen_g, imagen_b):
     imagen_r.thumbnail((200, 200))
@@ -110,17 +89,6 @@ label_imagen_b.pack(side=tk.LEFT, padx=10)
 # Label para mostrar imagen modificada
 label_imagen_modificada = tk.Label(frame_imagenes)
 label_imagen_modificada.pack(side=tk.LEFT, padx=10, pady=10)
-
-# Canvas para mostrar los histogramas
-frame_histogramas = tk.Frame(ventana)
-frame_histogramas.pack()
-
-canvas_histograma_r = tk.Canvas(frame_histogramas, width=256, height=100)
-canvas_histograma_r.pack(side=tk.LEFT, padx=10)
-canvas_histograma_g = tk.Canvas(frame_histogramas, width=256, height=100)
-canvas_histograma_g.pack(side=tk.LEFT, padx=10)
-canvas_histograma_b = tk.Canvas(frame_histogramas, width=256, height=100)
-canvas_histograma_b.pack(side=tk.LEFT, padx=10)
 
 # Scales para ajustar los valores RGB
 scale_r = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)

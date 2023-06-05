@@ -28,18 +28,17 @@ def generar_histogramas(imagen):
     histograma_r = r.histogram()
     histograma_g = g.histogram()
     histograma_b = b.histogram()
-    mostrar_histograma(histograma_r, canvas_histograma_r)
-    mostrar_histograma(histograma_g, canvas_histograma_g)
-    mostrar_histograma(histograma_b, canvas_histograma_b)
+    mostrar_histograma(histograma_r, canvas_histograma_r, "red")
+    mostrar_histograma(histograma_g, canvas_histograma_g, "green")
+    mostrar_histograma(histograma_b, canvas_histograma_b, "blue")
 
-def mostrar_histograma(histograma, canvas):
+def mostrar_histograma(histograma, canvas, color):
     canvas.delete("all")
     max_valor = max(histograma)
-    ancho = 256
     altura = 100
     for i, valor in enumerate(histograma):
         height = int(valor * altura / max_valor)
-        canvas.create_line(i, altura, i, altura - height, fill="black")
+        canvas.create_line(i, altura, i, altura - height, fill=color)
     canvas.pack()
 
 def modificar_imagen(*args):

@@ -12,6 +12,7 @@ def cargar_imagen():
         label_imagen_original.configure(image=imagen_tk)
         label_imagen_original.image = imagen_tk
         cargar_valores_rgb(imagen_original)
+        generar_histogramas(imagen_original)
 
 def cargar_valores_rgb(imagen):
     r, g, b = imagen.split()
@@ -21,7 +22,25 @@ def cargar_valores_rgb(imagen):
     scale_r.set(valor_r)
     scale_g.set(valor_g)
     scale_b.set(valor_b)
-    modificar_imagen()
+
+def generar_histogramas(imagen):
+    r, g, b = imagen.split()
+    histograma_r = r.histogram()
+    histograma_g = g.histogram()
+    histograma_b = b.histogram()
+    mostrar_histograma(histograma_r, canvas_histograma_r)
+    mostrar_histograma(histograma_g, canvas_histograma_g)
+    mostrar_histograma(histograma_b, canvas_histograma_b)
+
+def mostrar_histograma(histograma, canvas):
+    canvas.delete("all")
+    max_valor = max(histograma)
+    ancho = 256
+    altura = 100
+    for i, valor in enumerate(histograma):
+        height = int(valor * altura / max_valor)
+        canvas.create_line(i, altura, i, altura - height, fill="black")
+    canvas.pack()
 
 def modificar_imagen(*args):
     valor_r = scale_r.get()
@@ -38,6 +57,7 @@ def modificar_imagen(*args):
     label_imagen_modificada.configure(image=imagen_tk)
     label_imagen_modificada.image = imagen_tk
     mostrar_imagenes_rgb(r, g, b)
+    generar_histogramas(imagen_modificada)
 
 def mostrar_imagenes_rgb(imagen_r, imagen_g, imagen_b):
     imagen_r.thumbnail((200, 200))
@@ -62,13 +82,26 @@ def establecer_valores_por_defecto():
 ventana = tk.Tk()
 ventana.title("Editor de Imágenes")
 
+# Crear un widget Canvas con scrollbar
+canvas = tk.Canvas(ventana)
+canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+
+scrollbar = tk.Scrollbar(ventana, command=canvas.yview)
+scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+canvas.configure(yscrollcommand=scrollbar.set)
+canvas.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+# Crear un frame dentro del canvas para agregar contenido
+frame = tk.Frame(canvas)
+canvas.create_window((0, 0), window=frame, anchor="nw")
 
 # Botón para cargar imagen
-boton_cargar = tk.Button(ventana, text="Cargar Imagen", command=cargar_imagen)
+boton_cargar = tk.Button(frame, text="Cargar Imagen", command=cargar_imagen)
 boton_cargar.pack(pady=10)
 
 # Frame para mostrar las imágenes
-frame_imagenes = tk.Frame(ventana)
+frame_imagenes = tk.Frame(frame)
 frame_imagenes.pack()
 
 # Label para mostrar imagen original
@@ -91,17 +124,49 @@ label_imagen_b.pack(side=tk.LEFT, padx=10)
 label_imagen_modificada = tk.Label(frame_imagenes)
 label_imagen_modificada.pack(side=tk.LEFT, padx=10, pady=10)
 
+# Canvas para mostrar los histogramas
+frame_histogramas = tk.Frame(frame)
+frame_histogramas.pack()
+
+# Label para el título del histograma R
+label_titulo_r = tk.Label(frame_histogramas, text="R")
+label_titulo_r.pack(side=tk.LEFT, padx=10)
+
+canvas_histograma_r = tk.Canvas(frame_histogramas, width=256, height=100)
+canvas_histograma_r.pack(side=tk.LEFT, padx=10)
+
+# Label para el título del histograma G
+label_titulo_g = tk.Label(frame_histogramas, text="G")
+label_titulo_g.pack(side=tk.LEFT, padx=10)
+
+canvas_histograma_g = tk.Canvas(frame_histogramas, width=256, height=100)
+canvas_histograma_g.pack(side=tk.LEFT, padx=10)
+
+# Label para el título del histograma B
+label_titulo_b = tk.Label(frame_histogramas, text="B")
+label_titulo_b.pack(side=tk.LEFT, padx=10)
+
+canvas_histograma_b = tk.Canvas(frame_histogramas, width=256, height=100)
+canvas_histograma_b.pack(side=tk.LEFT, padx=10)
+
 # Scales para ajustar los valores RGB
-scale_r = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
+scale_r = tk.Scale(frame, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_r.pack(pady=5)
-scale_g = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
+scale_g = tk.Scale(frame, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_g.pack(pady=5)
-scale_b = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
+scale_b = tk.Scale(frame, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen)
 scale_b.pack(pady=5)
 
 # Crear el botón para establecer valores por defecto
-boton_valores_por_defecto = tk.Button(ventana, text="Restaurar", command=establecer_valores_por_defecto)
+boton_valores_por_defecto = tk.Button(frame, text="Estado Inicial", command=establecer_valores_por_defecto)
 boton_valores_por_defecto.pack(pady=5)
+
+# Configurar el canvas para desplazamiento
+canvas.config(scrollregion=canvas.bbox("all"))
+
+# Asociar el canvas al scroll
+canvas.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+canvas.configure(yscrollcommand=scrollbar.set)
 
 # Ejecutar la aplicación
 ventana.mainloop()

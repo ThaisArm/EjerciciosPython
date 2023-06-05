@@ -123,14 +123,17 @@ canvas_histograma_b = tk.Canvas(frame_histogramas, width=256, height=100)
 canvas_histograma_b.pack(side=tk.LEFT, padx=10)
 
 # Scales para ajustar los valores RGB
-scale_r = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Rojo")
-scale_r.pack(pady=5)
+frame_escalas = tk.Frame(ventana)
+frame_escalas.pack()
 
-scale_g = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Verde")
-scale_g.pack(pady=5)
+scale_r = tk.Scale(frame_escalas, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Rojo")
+scale_r.pack(side=tk.LEFT, padx=75)
 
-scale_b = tk.Scale(ventana, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Azul")
-scale_b.pack(pady=5)
+scale_g = tk.Scale(frame_escalas, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Verde")
+scale_g.pack(side=tk.LEFT, padx=75)
+
+scale_b = tk.Scale(frame_escalas, from_=-255, to=255, orient=tk.HORIZONTAL, command=modificar_imagen, label="Azul")
+scale_b.pack(side=tk.LEFT, padx=75)
 
 # Crear el botón para establecer valores por defecto
 boton_valores_por_defecto = tk.Button(ventana, text="Estado Inicial", command=establecer_valores_por_defecto)

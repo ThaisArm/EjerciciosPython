@@ -44,14 +44,14 @@ imshow(imgMedian)
 
 %FFT
 % Aplicar la transformada de Fourier
-imgFFT = fftshift(fft2(imgGray));
+imgFFT = fftshift(fft2(imgNoise));
 
 % Calcular las dimensiones de la imagen y el centro del espectro
-[m, n] = size(imgGray);
+[m, n] = size(imgNoise);
 center = [ceil(m/2), ceil(n/2)];
 
 % Definir el radio del filtro de paso bajo
-radius = 50;
+radius = 90;
 
 % Crear el filtro de paso bajo en el dominio de la frecuencia
 lowPassFilter = zeros(m, n);

@@ -46,7 +46,7 @@ imshow(imagen_gris);
 title('Imagen Original');
 subplot(1, 2, 2);
 imshow(filteredImg);
-title('Imagen Filtrada');
+title('Filtro Laplacian');
 
 %FILTRO DE LAPACIAN DE GAUSS
 % Aplicar el filtro
@@ -72,16 +72,24 @@ filteredImg45 = imfilter(imagen_gris, fspecial('prewitt'));
 filteredImg90 = imfilter(imagen_gris, rot90(fspecial('prewitt')));
 filteredImg135 = imfilter(imagen_gris, rot90(fspecial('prewitt'), 2));
 
+finalImg = filteredImg0 + filteredImg45 + filteredImg90 + filteredImg135;
+
 figure(4);
-subplot(2, 2, 1);
+subplot(3, 2, 1);
 imshow(filteredImg135);
 title('Filtro de Prewitt (135 grados)');
-subplot(2, 2, 2);
+subplot(3, 2, 2);
 imshow(filteredImg0);
 title('Filtro de Prewitt (0 grados)');
-subplot(2, 2, 3);
+subplot(3, 2, 3);
 imshow(filteredImg45);
 title('Filtro de Prewitt (45 grados)');
-subplot(2, 2, 4);
+subplot(3, 2, 4);
 imshow(filteredImg90);
 title('Filtro de Prewitt (90 grados)');
+subplot(3, 2, 5);
+imshow(imagen_gris);
+title('Imagen Original en Gris');
+subplot(3, 2, 6);
+imshow(finalImg);
+title('Imagen Sumada');

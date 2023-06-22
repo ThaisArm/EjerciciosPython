@@ -1,5 +1,6 @@
 from collections import Counter
 import math
+import random
 
 """DATASET: IRIS
   4 atributos, todos en cm: longitud del sépalo, anchura del sépalo, longitud del pétalo, ancho de pétalo
@@ -16,6 +17,9 @@ with open("KNN/irisdataset.data", "r") as file:
         y = int(line[-1])  
         X_train.append(x)
         y_train.append(y)
+    combined = list(zip(X_train, y_train))
+    random.shuffle(combined)
+    X_train, y_train = zip(*combined)
 
 def distancia_minkowski(x1, x2, p):
     suma = 0
@@ -40,10 +44,13 @@ def knn(p, x_test):
     etiquetas = Counter(etiquetas_cercanas)
     probabilidades = {etiqueta: count / k for etiqueta, count in etiquetas.items()}
 
-    return probabilidades
+    etiqueta_mayor_probabilidad = max(probabilidades, key=probabilidades.get)
+    probabilidad_mayor = probabilidades[etiqueta_mayor_probabilidad]
+    return etiqueta_mayor_probabilidad, probabilidad_mayor
 
-X_test = X_test = [5.4,3.9,1.7,0.5]
+X_test = X_test = [6.5,3.2,5.1,1.5]
 
-prediction = knn(2, X_test)
+etiqueta_prediccion, probabilidad_prediccion = knn(2, X_test)
 
-print(prediction)
+print("Etiqueta: ", etiqueta_prediccion)
+print("Probabilidad: ", probabilidad_prediccion)

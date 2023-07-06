@@ -49,7 +49,7 @@ def convertir_carpeta_heic_a_png(carpeta_principal, carpeta_destino, tamaño_red
 carpeta_principal = 'C:/REPOSITORIOIA/Proyecto/FotosHeic'
 
 # Ruta de la carpeta donde se guardarán las fotos PNG
-carpeta_destino = 'C:/REPOSITORIOIA/Proyecto/FotosPng'
+carpeta_destino = 'C:/REPOSITORIOIA/Proyecto/FotosPng' 
 
 
 # Tamaño al que se redimensionarán las imágenes (ancho, alto)

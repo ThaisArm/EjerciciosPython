@@ -29,7 +29,7 @@ def quitar_fondo_verde_carpeta(carpeta_principal, carpeta_destino):
         # Comprueba si es una carpeta
         if os.path.isdir(ruta_subcarpeta):
             # Crea la carpeta de destino si no existe
-            carpeta_estudiante = os.path.join(carpeta_destino, nombre_subcarpeta)
+            carpeta_estudiante = os.path.join(carpeta_destino, nombre_subcarpeta.replace (" ", ""))
             os.makedirs(carpeta_estudiante, exist_ok=True)
 
             # Recorre todos los archivos en la subcarpeta
@@ -51,10 +51,12 @@ def quitar_fondo_verde_carpeta(carpeta_principal, carpeta_destino):
                     imagen_sin_fondo.save(ruta_sin_fondo, "PNG")
 
 # Ruta de la carpeta principal que contiene las carpetas de los estudiantes
-carpeta_principal = 'C:/REPOSITORIOIA/Proyecto/FotosPng'
+#carpeta_principal = 'C:/REPOSITORIOIA/Proyecto/FotosPng'
+carpeta_principal = 'C:/Users/USER/Documents/THAIS_U/SEPTIMO/Inteligencia Artificial/EjerciciosPython/Proyecto/FotosPng'
 
 # Ruta de la carpeta donde se guardarán las imágenes sin fondo
-carpeta_destino = 'C:/REPOSITORIOIA/Proyecto/FotosSinFondo'
+#carpeta_destino = 'C:/REPOSITORIOIA/Proyecto/FotosSinFondo'
+carpeta_destino = 'C:/Users/USER/Documents/THAIS_U/SEPTIMO/Inteligencia Artificial/EjerciciosPython/Proyecto/FotosSinFondo/'
 
 # Quita el fondo verde de las imágenes en la carpeta principal y las guarda en la carpeta de destino
 quitar_fondo_verde_carpeta(carpeta_principal, carpeta_destino)

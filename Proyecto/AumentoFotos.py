@@ -88,7 +88,7 @@ for person_dir in os.listdir(root_dir):
                 elif transform == 'crop':
                     transformed_image = apply_crop(image, 0.1)
                 elif transform == 'brightness':
-                    transformed_image = apply_brightness(image, 0.2)
+                    transformed_image = apply_brightness(image, 0.6)
                 elif transform == 'shift':
                     transformed_image = apply_shift(image, 10)
                 
